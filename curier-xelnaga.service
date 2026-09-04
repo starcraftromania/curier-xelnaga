@@ -1,0 +1,21 @@
+[Unit]
+Description=Curierul Xel'Naga - economia si trivia Cetatii Xel'Naga
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=curier
+Group=curier
+WorkingDirectory=/opt/curier-xelnaga
+EnvironmentFile=/opt/curier-xelnaga/.env
+ExecStart=/usr/bin/node /opt/curier-xelnaga/src/index.js
+Restart=always
+RestartSec=10
+MemoryMax=400M
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=curier
+
+[Install]
+WantedBy=multi-user.target
