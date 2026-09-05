@@ -14,6 +14,15 @@ Node.js, ESM, discord.js 14. Ruleaza ca serviciu systemd pe un VM, langa Radio X
 - `/daily` cu streak, magazin cu roluri de culoare si servicii
 - King of Kings: clasament live in #king-of-kings, rolul 👑 Regele Regilor mutat automat
 - titluri: 🗡️ Marele Uzurpator, 💠 Boierul de Vespene, 🧠 Mintea Roiului, 🎙️ Gura Cetatii
+- buletinul de ladder (SC2 Pulse): `/leaga-contul`, 8 credite/victorie, anunt la promovare,
+  buletin zilnic la 23:00, cursa saptamanala de MMR cu rolul 📈 Ascensiunea Saptamanii
+- Marele Warp-in: sambata si duminica 18:00-20:00, +2 credite/minut pe voce, eveniment Discord
+- Intrebarea zilei: poll nativ la 19:00 in #general, 105 dileme fara repetitie
+- camere de voce proprii (join-to-create prin ➕ Creeaza camera), `/camera`
+- Pilonul: anunt cand intra primul om pe voce, contorul de front
+- dueluri (`/duel`), predictii (`/predictie`), carduri de replay (`/replay`)
+- vitrina: publica `clasament.json` pe site la 10 minute (cere GITHUB_TOKEN in .env)
+- paznicul radioului: alerta daca farul din #off-topic tace 20 de minute
 
 ## Instalare
 
@@ -34,8 +43,9 @@ Update: `git pull && systemctl restart curier-xelnaga`.
 ## Teste
 
 ```
-node test/ruleaza.js
+npm test
 ```
+(434 de verificari, fara Discord real)
 
 ## Atentie la ierarhia rolurilor
 

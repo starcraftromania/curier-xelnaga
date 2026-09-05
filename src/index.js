@@ -17,6 +17,19 @@ import { creeazaCicluPersistent, pregatesteRunda } from './trivia.js';
 import { cardPilot, rangul } from './profil.js';
 import { porneste as pornesteKingOfKings } from './kingofkings.js';
 import { porneste as pornesteTitluri } from './titluri.js';
+import * as vitrina from './vitrina.js';
+import * as warpin from './warpin.js';
+import * as intrebareaZilei from './intrebarea-zilei.js';
+import * as anuntLansare from './anunt-lansare.js';
+import * as buletin from './buletin.js';
+import * as camere from './camere.js';
+import * as pilon from './pilon.js';
+import * as paznicRadio from './paznic-radio.js';
+import * as social from './social.js';
+import * as replay from './replay.js';
+
+// Modulele de sine statatoare: fiecare exporta porneste(client, cfg) si DEFINITII.
+const MODULE = { vitrina, warpin, intrebareaZilei, anuntLansare, buletin, camere, pilon, paznicRadio, social, replay };
 
 const AICI = path.dirname(fileURLToPath(import.meta.url));
 
@@ -101,9 +114,14 @@ const client = new Client({
   ],
   partials: [Partials.GuildMember],
 });
+client.setMaxListeners(40); // fiecare modul isi pune ascultatorii lui
 
 pornesteKingOfKings(client, cfg);
 pornesteTitluri(client, cfg);
+for (const [nume, m] of Object.entries(MODULE)) {
+  try { m.porneste(client, cfg); } catch (e) { console.error(`[boot] modulul ${nume} nu a pornit:`, e.message); }
+}
+const TOATE_COMENZILE = [...DEFINITII, ...Object.values(MODULE).flatMap((m) => m.DEFINITII ?? [])];
 
 const M = cfg.moneda;
 const cicluIntrebari = creeazaCicluPersistent(BANCA.length);
@@ -380,7 +398,11 @@ const TEXT_GHID = () => [
   `· trivia in #trivia: primul raspuns corect ia ${TRIVIA.premiu}, cate o intrebare pe minut, plafon ${TRIVIA.plafonZilnic} ${M}/zi`,
   `· pachetele Medivac cad singure in #general, la ore aleatoare - primul care da click ia tot`,
   ``,
-  `**Comenzi**: \`/puncte\` \`/profil\` \`/clasament\` \`/magazin\` \`/cumpara\` \`/trivia\` \`/daily\` \`/ghid\``,
+  `**Comenzi**: \`/puncte\` \`/profil\` \`/clasament\` \`/magazin\` \`/cumpara\` \`/trivia\` \`/daily\` \`/duel\` \`/predictie\` \`/replay\` \`/camera\` \`/leaga-contul\` \`/cont\` \`/buletin\` \`/ladder\` \`/ghid\``,
+  `· \`/leaga-contul Nume#1234\` - iti leaga contul de SC2: 8 ${M} pe victorie de ladder, anunt la promovare, buletin zilnic la 23:00, cursa saptamanala de MMR`,
+  `· Marele Warp-in: sambata si duminica 18:00-20:00, fiecare minut pe voce valoreaza dublu`,
+  `· Intrebarea zilei: in fiecare seara la 19:00, in #general`,
+  `· \`/duel @om miza\` (10-100 ${M}), \`/replay fisier\` (30 ${M}), camere de voce proprii prin ➕ Creeaza camera`,
   ``,
   `**Titluri** - se muta singure, la 5 minute:`,
   `👑 Regele Regilor (locul 1 la credite) · 🗡️ Marele Uzurpator (locul 2) · 💠 Boierul de Vespene (locul 3)`,
@@ -588,8 +610,8 @@ client.once('clientReady', async () => {
   console.log(`[boot] date in ${store.undeSalvez()}`);
 
   try {
-    await client.application.commands.set(DEFINITII);
-    console.log(`[boot] ${DEFINITII.length} comenzi inregistrate`);
+    await client.application.commands.set(TOATE_COMENZILE);
+    console.log(`[boot] ${TOATE_COMENZILE.length} comenzi inregistrate: ${TOATE_COMENZILE.map((c) => '/' + c.name).join(' ')}`);
   } catch (e) {
     console.error('[boot] nu am putut inregistra comenzile:', e.message);
   }

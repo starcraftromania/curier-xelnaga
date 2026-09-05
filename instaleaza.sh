@@ -1,6 +1,6 @@
 #!/bin/bash
 # Instalarea Curierului Xel'Naga pe VM-ul Azure, langa Radio Xel'Naga.
-# Se ruleaza ca root, prin portal -> VM -> Run command.
+# Se ruleaza ca root, prin portal -> VM -> Run command, dupa git clone (sau il face el).
 set -euo pipefail
 
 DIR=/opt/curier-xelnaga
@@ -12,8 +12,9 @@ echo "== utilizator =="
 id curier >/dev/null 2>&1 || useradd --system --home "$DIR" --shell /usr/sbin/nologin curier
 
 echo "== fisiere =="
-mkdir -p "$DIR"
-tar -xzf /tmp/curier.tar.gz -C "$DIR"
+if [ ! -d "$DIR/src" ]; then
+  git clone https://github.com/starcraftromania/curier-xelnaga.git "$DIR"
+fi
 mkdir -p "$DIR/date"
 
 echo "== .env =="

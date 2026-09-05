@@ -1,17 +1,18 @@
 {
   "name": "curierul-xelnaga",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Curierul Xel'Naga - botul de economie si trivia al Cetatii Xel'Naga",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "node test/ruleaza.js"
+    "test": "bash test/toate.sh"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
+    "@replaysremastered/sc2readerjs": "0.1.9",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5"
   }
