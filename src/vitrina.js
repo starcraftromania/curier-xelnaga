@@ -105,7 +105,10 @@ export async function construiesteClasament(guild, c = IMPLICIT) {
   for (let k = 0; k < topCredite.length; k++) {
     credite.push({ loc: k + 1, nume: await nume(topCredite[k].id), credite: topCredite[k].valoare });
   }
-  const laRege = (k) => (credite[k] ? { nume: credite[k].nume, credite: credite[k].credite } : null);
+  // Schema pe care o citeste index.html de pe site: regi = LISTA [{loc, nume, credite, titlu}]
+  // (site-ul are propriile subtitluri; un obiect in loc de lista ii crapa scriptul si tabelele raman goale).
+  const TITLURI_REGI = ['Regele Regilor', 'Marele Uzurpator', 'Boierul de Vespene'];
+  const regi = credite.slice(0, 3).map((r, k) => ({ loc: k + 1, nume: r.nume, credite: r.credite, titlu: TITLURI_REGI[k] }));
 
   const topTrivia = store.clasamentDupa('triviaCastigate', 10);
   const trivia = [];
@@ -135,7 +138,7 @@ export async function construiesteClasament(guild, c = IMPLICIT) {
     generat: new Date().toISOString(),
     sursa: 'Curierul Xel\'Naga',
     creditSC2Pulse: CREDIT_PULSE,
-    regi: { rege: laRege(0), uzurpator: laRege(1), boier: laRege(2) },
+    regi,
     credite,
     ladder,
     trivia,
